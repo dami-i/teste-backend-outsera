@@ -6,18 +6,18 @@ import { isMode } from "./services/CsvDataLoader";
 
 const services: ServiceList = {
 	database: new SqliteDatabase("database/database.sqlite3"),
-	movieDataLoader: new MovieDataLoader("csv/movielist.csv"),
+	dataLoader: new MovieDataLoader("csv/movielist.csv"),
 	webServer: new NodeWebServer(),
 };
 
 init(services);
 
-async function init({ database, movieDataLoader, webServer }: ServiceList) {
+async function init({ database, dataLoader, webServer }: ServiceList) {
 	const mode = process.argv[2] ?? "replace";
 	if (!isMode(mode)) {
 		throw new Error("Modo de carregamento inválido. Deve ser 'replace' ou 'append'.");
 	}
-	
+
 	for (const signal of ["SIGINT", "SIGTERM", "SIGQUIT"]) {
 		process.on(signal, async (signal) => {
 			console.log("Finalizando aplicação com sinal:", signal);
@@ -39,7 +39,7 @@ async function init({ database, movieDataLoader, webServer }: ServiceList) {
 	await database.setup();
 
 	console.log("Carregando os dados do CSV no modo:", mode);
-	await movieDataLoader.load(database, mode);
+	await dataLoader.load(database, mode);
 
 	console.log("Inicializando o servidor web...");
 	await webServer.start();
@@ -47,6 +47,6 @@ async function init({ database, movieDataLoader, webServer }: ServiceList) {
 
 type ServiceList = {
 	database: Database;
-	movieDataLoader: CsvDataLoader;
+	dataLoader: CsvDataLoader;
 	webServer: WebServer;
 };
