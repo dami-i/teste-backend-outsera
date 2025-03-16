@@ -15,9 +15,9 @@ export default class SqliteDatabase implements Database {
 	public async setup(): Promise<void> {
 		// TODO
 	}
-	
-	public async unlock(): Promise<void> {
-		// TODO		
+
+	public async close(): Promise<void> {
+		this._database.close();
 	}
 
 	public async getInstance(): Promise<SqliteDatabase> {

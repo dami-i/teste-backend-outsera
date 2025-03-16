@@ -21,17 +21,17 @@ async function init({ database, dataLoader, webServer }: ServiceList) {
 	for (const signal of ["SIGINT", "SIGTERM", "SIGQUIT"]) {
 		process.on(signal, async (signal) => {
 			console.log("Finalizando aplicação com sinal:", signal);
-			await database.unlock();
+			await database.close();
 			process.exit(1);
 		});
 	}
 	process.on("beforeExit", async (code) => {
 		console.log("Finalizando aplicação com código:", code);
-		await database.unlock();
+		await database.close();
 	});
 	process.on("uncaughtException", async (err) => {
 		console.log("Finalizando aplicação com erro:", err.name, err.message);
-		await database.unlock();
+		await database.close();
 		process.exit(1);
 	});
 

@@ -1,5 +1,5 @@
 export interface Database {
 	setup(): Promise<void>;
-	unlock(): Promise<void>;
+	close(): Promise<void>;
 	execute(query: string): Promise<void>;
 }
