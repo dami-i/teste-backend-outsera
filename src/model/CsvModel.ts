@@ -17,4 +17,14 @@ namespace CsvModel {
 			&& "winner" in obj && typeof obj.winner === "string";
 	}
 
+	export function databaseAdapter(row: MovieRow): DatabaseModel.Movie {
+		return {
+			year: Number(row.year),
+			title: row.title,
+			studios: row.studios,
+			producers: row.producers,
+			winner: row.winner === "yes",
+		};
+	}
+
 }
