@@ -18,10 +18,6 @@ export default class SqliteDatabase implements Database {
 		});
 	}
 
-	public async getInstance() {
-		return this._database;
-	}
-
 	public async init() {
 		const initSql = fs.readFileSync(path.resolve("database", "schema_definition.sql"), "utf-8");
 		this._database.exec(initSql, (err) => {
@@ -32,6 +28,24 @@ export default class SqliteDatabase implements Database {
 	public async close() {
 		console.log("Fechando banco de dados...");
 		this._database.close();
+	}
+
+	public async query<T>(sql: string, ...params: any[]): Promise<T[]> {
+		return new Promise<T[]>((resolve, reject) => {
+			this._database.all(sql, params, (err, rows) => {
+				if (err) reject(new Error("Erro ao executar consulta SQL: " + err.message));
+				resolve(rows as T[]);
+			});
+		});
+	}
+
+	public async exec(sql: string, ...params: any[]): Promise<void> {
+		return new Promise<void>((resolve, reject) => {
+			this._database.run(sql, params, (err) => {
+				if (err) reject(new Error("Erro ao executar comando SQL: " + err.message));
+				resolve();
+			});
+		});
 	}
 
 }
