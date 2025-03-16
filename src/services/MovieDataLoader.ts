@@ -16,19 +16,24 @@ export default class MovieDataLoader implements CsvDataLoader {
 		this._path = path.resolve(csvPath);
 	}
 
-	public async load(database: Database, mode: Mode): Promise<void> {
+	public async load(database: Database, mode: Mode) {
 		const movieCsvRows = await CsvParser.parseFile<CsvModel.MovieRow>(this._path);
-
 		if (movieCsvRows.some(row => !CsvModel.isMovieCsvRow(row))) {
 			throw new Error("Há um ou mais linhas inválidas no arquivo CSV.");
 		}
+		const movieDatabaseRows = movieCsvRows.map(CsvModel.databaseAdapter);
 
-		// TODO Converter para formato do modelo
-		mode;
-		const query = movieCsvRows.toString();
-		// const query = "";
-
-		return database.execute(query);
+		try {
+			const repository = new MovieRepository(database);
+			if (mode === "replace") {
+				await repository.resetTo(movieDatabaseRows);
+			} else if (mode = "append") {
+				await repository.insertMany(movieDatabaseRows);
+			}
+		} catch (err) {
+			const msg = err instanceof Error ? err.message : typeof err === "string" ? err : "";
+			throw new Error("Ocorreu um erro ao carregar os dados do CSV no banco de dados: " + msg);
+		}
 	}
 
 }
