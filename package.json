@@ -7,6 +7,8 @@
 		"build": "tsc --build --clean && tsc",
 		"build:watch": "tsc --build --clean && tsc --watch",
 		"start": "node build/init.js",
+		"start:append": "npm start -- append",
+		"start:replace": "npm start -- replace",
 		"dev": "nodemon build/init.js"
 	},
 	"dependencies": {
