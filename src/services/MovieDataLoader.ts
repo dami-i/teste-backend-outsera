@@ -2,6 +2,7 @@ import path from "node:path";
 import CsvParser from "../lib/CsvParser";
 import { Mode, CsvDataLoader } from "./CsvDataLoader";
 import { Database } from "../database/Database";
+import { CsvModel } from "../model/CsvModel";
 
 export default class MovieDataLoader implements CsvDataLoader {
 

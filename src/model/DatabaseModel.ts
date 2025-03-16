@@ -1,4 +1,4 @@
-namespace DatabaseModel {
+export namespace DatabaseModel {
 
 	export type Movie = {
 		id?: number;

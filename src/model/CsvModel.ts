@@ -1,4 +1,6 @@
-namespace CsvModel {
+import { DatabaseModel } from "./DatabaseModel";
+
+export namespace CsvModel {
 
 	export type MovieRow = {
 		year: string;
