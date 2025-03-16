@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import path from "node:path";
 import sqlite3 from "sqlite3";
 import { Database } from "./Database";
@@ -22,7 +23,10 @@ export default class SqliteDatabase implements Database {
 	}
 
 	public async init() {
-		// TODO
+		const initSql = fs.readFileSync(path.resolve("database", "schema_definition.sql"), "utf-8");
+		this._database.exec(initSql, (err) => {
+			if (err) throw new Error("Erro ao inicializar banco de dados SQLite: " + err.message);
+		});
 	}
 
 	public async close() {
