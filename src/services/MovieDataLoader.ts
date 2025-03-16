@@ -1,8 +1,8 @@
 import path from "node:path";
-import { CsvDataLoader } from "./CsvDataLoader";
-import { Database } from "../database/Database";
 import CsvParser from "../lib/CsvParser";
 import { isMovieCsvRow, MovieCsvRow } from "../model/MovieCsvRow";
+import { Mode, CsvDataLoader } from "./CsvDataLoader";
+import { Database } from "../database/Database";
 
 export default class MovieDataLoader implements CsvDataLoader {
 
@@ -15,19 +15,19 @@ export default class MovieDataLoader implements CsvDataLoader {
 		this._path = path.resolve(csvPath);
 	}
 
-	public async startupLoad(databaseService: Database): Promise<void> {
+	public async load(database: Database, mode: Mode): Promise<void> {
 		const movieCsvRows = await CsvParser.parseFile<MovieCsvRow>(this._path);
 
 		if (movieCsvRows.some(row => !isMovieCsvRow(row))) {
 			throw new Error("Há um ou mais linhas inválidas no arquivo CSV.");
 		}
 
-		// TODO Parei aqui
-
+		// TODO Converter para formato do modelo
+		mode;
 		const query = movieCsvRows.toString();
 		// const query = "";
 
-		return databaseService.execute(query);
+		return database.execute(query);
 	}
 
 }
