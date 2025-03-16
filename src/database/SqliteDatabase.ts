@@ -17,21 +17,17 @@ export default class SqliteDatabase implements Database {
 		});
 	}
 
-	public async setup(): Promise<void> {
+	public async getInstance() {
+		return this._database;
+	}
+
+	public async init() {
 		// TODO
 	}
 
-	public async close(): Promise<void> {
+	public async close() {
+		console.log("Fechando banco de dados...");
 		this._database.close();
-	}
-
-	public async getInstance(): Promise<SqliteDatabase> {
-		return this;
-	}
-
-	public async execute(query: string): Promise<void> {
-		query;
-		this._path;
 	}
 
 }

@@ -36,7 +36,7 @@ async function init({ database, dataLoader, webServer }: ServiceList) {
 	});
 
 	console.log("Inicializando o banco de dados...");
-	await database.setup();
+	await database.init();
 
 	console.log("Carregando os dados do CSV no modo:", mode);
 	await dataLoader.load(database, mode);
