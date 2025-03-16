@@ -13,7 +13,7 @@ const services: ServiceList = {
 init(services);
 
 async function init({ database, movieDataLoader, webServer }: ServiceList) {
-	const mode = process.argv[2];
+	const mode = process.argv[2] ?? "replace";
 	if (!isMode(mode)) {
 		throw new Error("Modo de carregamento inválido. Deve ser 'replace' ou 'append'.");
 	}
