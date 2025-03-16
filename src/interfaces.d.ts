@@ -1,6 +1,6 @@
-import type { WebServer } from './web/webserver';
-import type { CsvDataLoader } from './services/CsvDataLoader';
-import type { Database } from './database/Database';
+import { WebServer } from './web/WebServer.d';
+import { CsvDataLoader } from './services/CsvDataLoader';
+import { Database } from './database/Database.d';
 
 export {
 	Database,
