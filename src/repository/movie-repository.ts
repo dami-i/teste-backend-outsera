@@ -18,9 +18,8 @@ export default class MovieRepository {
 	}
 
 	public async insertMany(movies: DatabaseModel.Movie[]) {
-		// TODO
-		movies;
-		this._database;
+		const { query, params } = this._strategy.insertMany(movies);
+		await this._database.exec(query, params);
 	}
 
 }
