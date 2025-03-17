@@ -4,13 +4,13 @@ import MovieDataLoader from "./services/movie.data-loader";
 import NodeWebServer from "./web/node.web-server";
 import { isMode } from "./services/data-loader";
 
-export const services: ServiceList = {
+const initServices: ServiceList = {
 	database: new SqliteDatabase("database/database.sqlite3"),
 	dataLoader: new MovieDataLoader("csv/movielist.csv"),
 	webServer: new NodeWebServer(),
 };
 
-init(services);
+init(initServices);
 
 async function init({ database, dataLoader, webServer }: ServiceList) {
 	const mode = process.argv[2] ?? "replace";
