@@ -1,8 +1,8 @@
 export namespace DatabaseStrategy {
 
-	export interface Movie {
-		resetTo(movies: DatabaseModel.Movie[]): [string, any[]];
-		insertMany(movies: DatabaseModel.Movie[]): [string, any[]];
+	export interface Movies {
+		resetTo(movies: DatabaseModel.Movie[]): { query: string, params: any[]; };
+		insertMany(movies: DatabaseModel.Movie[]): { query: string, params: any[]; };
 	}
 
 }

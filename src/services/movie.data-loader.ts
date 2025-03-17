@@ -25,7 +25,7 @@ export default class MovieDataLoader implements CsvDataLoader {
 		const movieDatabaseRows = movieCsvRows.map(CsvModel.databaseAdapter);
 
 		try {
-			const strategy = new SqliteDatabaseStrategy.Movie();
+			const strategy = new SqliteDatabaseStrategy.Movies();
 			const repository = new MovieRepository(database, strategy);
 			if (mode === "replace") {
 				await repository.resetTo(movieDatabaseRows);

@@ -3,16 +3,19 @@ import { DatabaseStrategy } from "./database-strategy";
 
 export namespace SqliteDatabaseStrategy {
 
-	export class Movie implements DatabaseStrategy.Movie {
-
-		resetTo(_: DatabaseModel.Movie[]): [string, any[]] {
-			throw new Error("Method not implemented.");
+	export class Movies implements DatabaseStrategy.Movies {
+		resetTo(_movies: DatabaseModel.Movie[]): { query: string, params: any[]; } {
+			return {
+				query: "SELECT 1;",
+				params: [],
+			};
 		}
-
-		insertMany(_: DatabaseModel.Movie[]): [string, any[]] {
-			throw new Error("Method not implemented.");
+		insertMany(_movies: DatabaseModel.Movie[]): { query: string, params: any[]; } {
+			return {
+				query: "SELECT 1;",
+				params: [],
+			};
 		}
-		
 	}
 
 }
