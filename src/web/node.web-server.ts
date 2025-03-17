@@ -1,6 +1,5 @@
 import net from "node:net";
 import http from "node:http";
-
 import { WebServer } from "../interfaces";
 import app from "./app";
 

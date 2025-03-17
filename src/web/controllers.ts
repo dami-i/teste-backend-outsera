@@ -1,7 +1,8 @@
 import AwardsController from "../controllers/awards-controller";
+import { SqliteQueryStrategy } from "../database/sqlite.query-strategy";
+import { services } from "../init";
+import MovieRepository from "../repository/movie-repository";
 
-const awardsController = new AwardsController();
-
-export {
-	awardsController,
+export default {
+	awards: new AwardsController(new MovieRepository(services.database, new SqliteQueryStrategy.Movies())),
 };
