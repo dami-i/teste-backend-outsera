@@ -5,7 +5,7 @@ export namespace SqliteQueryStrategy {
 
 	export class Movies implements QueryStrategy.Movies {
 
-		resetTo(movies: DatabaseModel.Movie[]): QueryStrategy.QueryPlan {
+		public resetTo(movies: DatabaseModel.Movie[]): QueryStrategy.QueryPlan {
 			const inserts: QueryStrategy.Query[] = movies.map(movie => {
 				return {
 					query: "INSERT INTO movies (title, year, studios, producers, winner) VALUES (?, ?, ?, ?, ?);",
@@ -21,7 +21,7 @@ export namespace SqliteQueryStrategy {
 			];
 		}
 
-		insertMany(movies: DatabaseModel.Movie[]): QueryStrategy.QueryPlan {
+		public insertMany(movies: DatabaseModel.Movie[]): QueryStrategy.QueryPlan {
 			const inserts: QueryStrategy.Query[] = movies.map(movie => {
 				return {
 					query: "INSERT INTO movies (title, year, studios, producers, winner) VALUES (?, ?, ?, ?, ?);",
@@ -33,6 +33,10 @@ export namespace SqliteQueryStrategy {
 				...inserts,
 				{ query: "COMMIT;" },
 			];
+		}
+
+		public findWinners(): QueryStrategy.Query {
+			return { query: "SELECT * FROM movies WHERE winner = 1;" };
 		}
 
 	}

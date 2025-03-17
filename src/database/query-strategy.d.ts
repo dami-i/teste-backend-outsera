@@ -6,6 +6,7 @@ export namespace QueryStrategy {
 	export interface Movies {
 		resetTo(movies: DatabaseModel.Movie[]): QueryPlan;
 		insertMany(movies: DatabaseModel.Movie[]): QueryPlan;
+		findWinners(): Query;
 	}
 
 }
