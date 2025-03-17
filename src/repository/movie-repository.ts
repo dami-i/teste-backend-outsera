@@ -13,13 +13,17 @@ export default class MovieRepository {
 	}
 
 	public async resetTo(movies: DatabaseModel.Movie[]) {
-		const { query, params } = this._strategy.resetTo(movies);
-		await this._database.exec(query, params);
+		const queryPlan = this._strategy.resetTo(movies);
+		for await (const { query, params } of queryPlan) {
+			await this._database.exec(query, params);
+		}
 	}
 
 	public async insertMany(movies: DatabaseModel.Movie[]) {
-		const { query, params } = this._strategy.insertMany(movies);
-		await this._database.exec(query, params);
+		const queryPlan = this._strategy.insertMany(movies);
+		for await (const { query, params } of queryPlan) {
+			await this._database.exec(query, params);
+		}
 	}
 
 }
