@@ -5,18 +5,34 @@ export namespace SqliteQueryStrategy {
 
 	export class Movies implements QueryStrategy.Movies {
 
-		resetTo(_movies: DatabaseModel.Movie[]): QueryStrategy.QueryPlan {
-			return [{
-				query: "INSERT INTO movies (title, year, studios, producers, winner) VALUES (?, ?, ?, ?, ?);",
-				params: ["Um Teste Bom Pra Cachorro", 2020, "Test Studios", "Testers", true],
-			}];
+		resetTo(movies: DatabaseModel.Movie[]): QueryStrategy.QueryPlan {
+			const inserts: QueryStrategy.Query[] = movies.map(movie => {
+				return {
+					query: "INSERT INTO movies (title, year, studios, producers, winner) VALUES (?, ?, ?, ?, ?);",
+					params: [movie.title, movie.year, movie.studios, movie.producers, movie.winner],
+				};
+			});
+			return [
+				{ query: "BEGIN TRANSACTION;" },
+				{ query: "DELETE FROM movies;" },
+				{ query: "UPDATE SQLITE_SEQUENCE SET seq = 0 WHERE name = 'movies';" },
+				...inserts,
+				{ query: "COMMIT;" },
+			];
 		}
 
-		insertMany(_movies: DatabaseModel.Movie[]): QueryStrategy.QueryPlan {
-			return [{
-				query: "INSERT INTO movies (title, year, studios, producers, winner) VALUES (?, ?, ?, ?, ?);",
-				params: ["Teste de Inserção", 2025, "Test Studios", "Testers", false],
-			}];
+		insertMany(movies: DatabaseModel.Movie[]): QueryStrategy.QueryPlan {
+			const inserts: QueryStrategy.Query[] = movies.map(movie => {
+				return {
+					query: "INSERT INTO movies (title, year, studios, producers, winner) VALUES (?, ?, ?, ?, ?);",
+					params: [movie.title, movie.year, movie.studios, movie.producers, movie.winner],
+				};
+			});
+			return [
+				{ query: "BEGIN TRANSACTION;" },
+				...inserts,
+				{ query: "COMMIT;" },
+			];
 		}
 
 	}
