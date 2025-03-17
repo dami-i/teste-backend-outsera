@@ -1,9 +1,9 @@
 import { DatabaseModel } from "../model/database-model";
-import { DatabaseStrategy } from "./database-strategy";
+import { QueryStrategy } from "./query-strategy";
 
-export namespace SqliteDatabaseStrategy {
+export namespace SqliteQueryStrategy {
 
-	export class Movies implements DatabaseStrategy.Movies {
+	export class Movies implements QueryStrategy.Movies {
 		resetTo(_movies: DatabaseModel.Movie[]): { query: string, params: any[]; } {
 			return {
 				query: "SELECT 1;",

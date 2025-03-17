@@ -1,13 +1,13 @@
 import { Database } from "../database/database";
-import { DatabaseStrategy } from "../database/database-strategy";
+import { QueryStrategy } from "../database/query-strategy";
 import { DatabaseModel } from "../model/database-model";
 
 export default class MovieRepository {
 
 	private _database: Database;
-	private _strategy: DatabaseStrategy.Movies;
+	private _strategy: QueryStrategy.Movies;
 
-	constructor (database: Database, strategy: DatabaseStrategy.Movies) {
+	constructor (database: Database, strategy: QueryStrategy.Movies) {
 		this._database = database;
 		this._strategy = strategy;
 	}

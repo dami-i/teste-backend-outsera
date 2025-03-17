@@ -1,4 +1,4 @@
-export namespace DatabaseStrategy {
+export namespace QueryStrategy {
 
 	export interface Movies {
 		resetTo(movies: DatabaseModel.Movie[]): { query: string, params: any[]; };
