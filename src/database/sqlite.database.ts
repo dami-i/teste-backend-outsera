@@ -30,7 +30,7 @@ export default class SqliteDatabase implements Database {
 		this._database.close();
 	}
 
-	public async query<T>(sql: string, params: any[]): Promise<T[]> {
+	public async query<T>(sql: string, params?: any[]): Promise<T[]> {
 		return new Promise<T[]>((resolve, reject) => {
 			this._database.all(sql, params, (err, rows) => {
 				if (err) reject(new Error("Erro ao executar consulta SQL: " + err.message));
@@ -39,7 +39,7 @@ export default class SqliteDatabase implements Database {
 		});
 	}
 
-	public async exec(sql: string, params: any[]): Promise<void> {
+	public async exec(sql: string, params?: any[]): Promise<void> {
 		return new Promise<void>((resolve, reject) => {
 			this._database.run(sql, params, (err) => {
 				if (err) reject(new Error("Erro ao executar comando SQL: " + err.message));
