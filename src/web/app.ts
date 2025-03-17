@@ -1,8 +1,11 @@
 import express, { ErrorRequestHandler, RequestHandler } from "express";
+import v1 from "./api-v1-router";
 
 const app = express();
 
 app.use(express.json());
+
+app.use("/api/v1", v1);
 
 const notFoundHandler: RequestHandler = (_req, res) => {
 	return res.status(404).json({ error: "Not Found" });
