@@ -11,8 +11,8 @@ export default class AwardsController {
 	}
 
 	public async getMinMaxIntervals(): Promise<AwardsInterval> {
-		const movies = await this._repository.findAllWithAwards();
-		const result = this._service.getMinMaxIntervals(movies);
+		const awardedMovies = await this._repository.findAllWithAwards();
+		const result = this._service.getMinMaxIntervals(awardedMovies);
 		return result;
 	}
 
