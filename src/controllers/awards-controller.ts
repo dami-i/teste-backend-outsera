@@ -1,31 +1,19 @@
+import MovieRepository from "../repository/movie-repository";
+import AwardsService, { AwardsInterval } from "../services/awards-service";
+
 export default class AwardsController {
 
 	private _repository: MovieRepository;
-	private _service: AwardsService;
+	private _service: AwardsService = new AwardsService();
 
-	constructor (service: AwardsService, repository: MovieRepository) {
+	constructor (repository: MovieRepository) {
 		this._repository = repository;
-		this._service = service;
 	}
 
 	public async getMinMaxIntervals(): Promise<AwardsInterval> {
-		// TODO:
-		// Consultar o repositório de filmes
-		// Chamar o serviço que filtra os registros, processa e calcula os intervalos
-		// Encontrar os intervalos e retornar
-		return {} as AwardsInterval;
+		const movies = await this._repository.findAllWithAwards();
+		const result = this._service.getMinMaxIntervals(movies);
+		return result;
 	}
 
 }
-
-type AwardsInterval = {
-	min: Interval[];
-	max: Interval[];
-};
-
-type Interval = {
-	producer: string;
-	interval: number;
-	previousWin: number;
-	followingWin: number;
-};

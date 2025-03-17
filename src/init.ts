@@ -4,7 +4,7 @@ import MovieDataLoader from "./services/movie.data-loader";
 import NodeWebServer from "./web/node.web-server";
 import { isMode } from "./services/data-loader";
 
-const services: ServiceList = {
+export const services: ServiceList = {
 	database: new SqliteDatabase("database/database.sqlite3"),
 	dataLoader: new MovieDataLoader("csv/movielist.csv"),
 	webServer: new NodeWebServer(),
