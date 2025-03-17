@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from "node:path";
 import sqlite3 from "sqlite3";
-import { Database } from "./Database";
+import { Database } from "./database";
 
 export default class SqliteDatabase implements Database {
 

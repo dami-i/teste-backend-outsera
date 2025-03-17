@@ -1,6 +1,6 @@
-import { Database } from "../database/Database.d";
+import { Database } from "../database/database";
 import { sqliteStatements } from "../database/statements.sqlite";
-import { DatabaseModel } from "../model/DatabaseModel";
+import { DatabaseModel } from "../model/database-model";
 
 export default class MovieRepository {
 

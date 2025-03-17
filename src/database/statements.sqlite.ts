@@ -1,4 +1,4 @@
-import { DatabaseModel } from "../model/DatabaseModel";
+import { DatabaseModel } from "../model/database-model";
 
 export const sqliteStatements = {
 	movies: {

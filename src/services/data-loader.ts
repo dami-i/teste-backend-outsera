@@ -1,4 +1,4 @@
-import { Database } from "../database/Database";
+import { Database } from "../database/database";
 
 export interface CsvDataLoader {
 	load(database: Database, mode: Mode): Promise<void>;

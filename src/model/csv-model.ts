@@ -1,4 +1,4 @@
-import { DatabaseModel } from "./DatabaseModel";
+import { DatabaseModel } from "./database-model";
 
 export namespace CsvModel {
 

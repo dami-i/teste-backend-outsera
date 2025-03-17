@@ -1,9 +1,9 @@
 import path from "node:path";
-import CsvParser from "../lib/CsvParser";
-import { Mode, CsvDataLoader } from "./CsvDataLoader";
-import { Database } from "../database/Database";
-import MovieRepository from "../repository/MovieRepository";
-import { CsvModel } from "../model/CsvModel";
+import CsvParser from "../lib/csv-parser";
+import { Mode, CsvDataLoader } from "./data-loader";
+import { Database } from "../database/database";
+import MovieRepository from "../repository/movie-repository";
+import { CsvModel } from "../model/csv-model";
 
 export default class MovieDataLoader implements CsvDataLoader {
 

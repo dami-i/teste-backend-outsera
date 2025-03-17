@@ -1,8 +1,8 @@
 import type { Database, CsvDataLoader, WebServer } from "./interfaces";
-import SqliteDatabase from "./database/SqliteDatabase";
-import MovieDataLoader from "./services/MovieDataLoader";
-import NodeWebServer from "./web/NodeWebServer";
-import { isMode } from "./services/CsvDataLoader";
+import SqliteDatabase from "./database/sqlite.database";
+import MovieDataLoader from "./services/movie.data-loader";
+import NodeWebServer from "./web/node.web-server";
+import { isMode } from "./services/data-loader";
 
 const services: ServiceList = {
 	database: new SqliteDatabase("database/database.sqlite3"),
