@@ -1,5 +1,5 @@
 import Router from "express";
-import { AwardsController } from "./controllers";
+import { awardsController } from "./controllers";
 
 const v1 = Router();
 
@@ -9,7 +9,7 @@ v1.get("/", (_, res) => {
 
 v1.get("/awards-interval", async (_, res, next) => {
 	try {
-		const result = await AwardsController.getMinMaxIntervals();
+		const result = await awardsController.getMinMaxIntervals();
 		return res.status(200).json(result);
 	} catch (err) {
 		return next(err);
