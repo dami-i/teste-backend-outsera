@@ -1,6 +1,6 @@
-export default class MovieController {
+export default class AwardsController {
 
-	public static async getAwardsInterval(): Promise<AwardsInterval> {
+	public static async getMinMaxIntervals(): Promise<AwardsInterval> {
 		return {} as AwardsInterval;
 	}
 
