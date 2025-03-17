@@ -4,6 +4,7 @@ import { Mode, CsvDataLoader } from "./data-loader";
 import { Database } from "../database/database";
 import MovieRepository from "../repository/movie-repository";
 import { CsvModel } from "../model/csv-model";
+import { SqliteDatabaseStrategy } from "../database/sqlite.database-strategy";
 
 export default class MovieDataLoader implements CsvDataLoader {
 
@@ -24,7 +25,8 @@ export default class MovieDataLoader implements CsvDataLoader {
 		const movieDatabaseRows = movieCsvRows.map(CsvModel.databaseAdapter);
 
 		try {
-			const repository = new MovieRepository(database);
+			const strategy = new SqliteDatabaseStrategy.Movie();
+			const repository = new MovieRepository(database, strategy);
 			if (mode === "replace") {
 				await repository.resetTo(movieDatabaseRows);
 			} else if (mode = "append") {

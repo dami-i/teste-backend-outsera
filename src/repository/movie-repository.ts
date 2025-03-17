@@ -1,18 +1,20 @@
 import { Database } from "../database/database";
-import { sqliteStatements } from "../database/statements.sqlite";
+import { DatabaseStrategy } from "../database/database-strategy";
 import { DatabaseModel } from "../model/database-model";
 
 export default class MovieRepository {
 
 	private _database: Database;
-	private _statements: Record<string, any> = sqliteStatements;
+	private _strategy: DatabaseStrategy.Movie;
 
-	constructor (database: Database) {
+	constructor (database: Database, strategy: DatabaseStrategy.Movie) {
 		this._database = database;
+		this._strategy = strategy;
 	}
 
 	public async resetTo(movies: DatabaseModel.Movie[]) {
-		await this._database.exec(this._statements["movies"].resetTo(movies));
+		const [query, params] = this._strategy.resetTo(movies);
+		await this._database.exec(query, params);
 	}
 
 	public async insertMany(movies: DatabaseModel.Movie[]) {
