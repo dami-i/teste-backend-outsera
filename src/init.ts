@@ -3,10 +3,11 @@ import SqliteDatabase from "./database/sqlite.database";
 import MovieDataLoader from "./services/movie.data-loader";
 import NodeWebServer from "./web/node.web-server";
 import { isMode } from "./services/data-loader";
+import config from "./config";
 
 const initServices: ServiceList = {
-	database: new SqliteDatabase("data/database.sqlite3"),
-	dataLoader: new MovieDataLoader("csv/movielist.csv"),
+	database: new SqliteDatabase(config.databasePath),
+	dataLoader: new MovieDataLoader(config.csvPath),
 	webServer: new NodeWebServer(),
 };
 
