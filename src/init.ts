@@ -5,15 +5,15 @@ import NodeWebServer from "./web/node.web-server";
 import { isMode } from "./services/data-loader";
 import config from "./config";
 
-const initServices: ServiceList = {
-	database: new SqliteDatabase(config.databasePath),
-	dataLoader: new MovieDataLoader(config.csvPath),
-	webServer: new NodeWebServer(),
-};
+init();
 
-init(initServices);
+async function init() {
+	const services: ServiceList = {
+		database: new SqliteDatabase(config.databasePath),
+		dataLoader: new MovieDataLoader(config.csvPath),
+		webServer: new NodeWebServer(),
+	};
 
-async function init({ database, dataLoader, webServer }: ServiceList) {
 	const mode = process.argv[2] ?? "replace";
 	if (!isMode(mode)) {
 		throw new Error("Modo de carregamento inválido. Deve ser 'replace' ou 'append'.");
@@ -22,29 +22,29 @@ async function init({ database, dataLoader, webServer }: ServiceList) {
 	for (const signal of ["SIGINT", "SIGTERM", "SIGQUIT"]) {
 		process.on(signal, async (signal) => {
 			console.log("Finalizando aplicação com sinal:", signal);
-			await database.close();
+			await services.database.close();
 			process.exit(1);
 		});
 	}
 	process.on("beforeExit", async (code) => {
 		console.log("Finalizando aplicação com código:", code);
-		await database.close();
+		await services.database.close();
 	});
 	process.on("uncaughtException", async (err) => {
 		console.log("Finalizando aplicação com erro:", err.name, err.message);
-		await database.close();
+		await services.database.close();
 		process.exit(1);
 	});
 
 	console.log("Inicializando o banco de dados...");
-	await database.init();
-	await database.migrate();
+	await services.database.init();
+	await services.database.migrate();
 
 	console.log("Carregando os dados do CSV no modo:", mode);
-	await dataLoader.load(database, mode);
+	await services.dataLoader.load(services.database, mode);
 
 	console.log("Inicializando o servidor web...");
-	await webServer.start();
+	await services.webServer.start();
 };
 
 type ServiceList = {
