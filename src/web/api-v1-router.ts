@@ -4,10 +4,6 @@ import { WebServerControllers } from "../controllers/web-server.controllers";
 export function createV1Router(controllers: WebServerControllers) {
 	const v1 = Router();
 
-	v1.get("/", (_, res) => {
-		return res.redirect("/api/docs");
-	});
-
 	v1.get("/awards-interval", async (_, res, next) => {
 		try {
 			const result = await controllers.awards.getMinMaxIntervals();
@@ -15,6 +11,10 @@ export function createV1Router(controllers: WebServerControllers) {
 		} catch (err) {
 			return next(err);
 		}
+	});
+
+	v1.get("/", (_, res) => {
+		return res.redirect("/api/docs");
 	});
 
 	return v1;
