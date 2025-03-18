@@ -6,11 +6,13 @@ import { WebServerControllers } from "../controllers/web-server.controllers";
 
 export default class ExpressWebServer implements WebServer {
 
+	private _server: http.Server | undefined;
+	
 	public async start(controllers: WebServerControllers) {
 		const app = this._createApp(controllers);
-		const server = http.createServer(app);
+		this._server = http.createServer(app);
 		const port = await this._findFreePort();
-		server.listen(port, () => {
+		this._server.listen(port, () => {
 			console.log(`O servidor está rodando em http://localhost:${port}/`);
 		});
 	}
@@ -40,6 +42,13 @@ export default class ExpressWebServer implements WebServer {
 			port++;
 		}
 		throw new Error("Não foram encontradas portas livres. Encerrando aplicação.");
+	}
+	
+	public get server(): http.Server {
+		if (!this._server) {
+			throw new Error("Server has not been initialized yet.");
+		}
+		return this._server;
 	}
 
 }
