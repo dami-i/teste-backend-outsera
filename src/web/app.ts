@@ -8,12 +8,13 @@ import { WebServerControllers } from "../controllers/web-server.controllers";
 export function setupApp(controllers: WebServerControllers) {
 	const app = express();
 	const v1Router = createV1Router(controllers);
-
-	app.use("/test", (_, res) => { return res.status(200).send("OK"); });
 	
+	app.use("/test", (_, res) => { return res.status(200).send("OK"); });
+
 	const apiDoc = YAML.load(path.resolve("api/tsp-output/schema/openapi.1.0.yaml"));
 	app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(apiDoc));
-	
+	app.use("/", (_, res) => { return res.redirect("/api/docs"); });
+
 	app.use(express.json());
 	app.use("/api/v1", v1Router);
 
