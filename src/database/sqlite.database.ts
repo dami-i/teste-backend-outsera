@@ -6,33 +6,47 @@ import { Database } from "./database";
 export default class SqliteDatabase implements Database {
 
 	private _path: string;
-	private _database: sqlite3.Database;
+	private _database: sqlite3.Database | undefined;
 
 	/**
 	 * @param databasePath Path to where the database file is stored. Relative to the project's root.
 	 */
 	public constructor (databasePath: string) {
 		this._path = path.resolve(databasePath);
-		this._database = new sqlite3.Database(this._path, (err) => {
-			if (err) throw new Error("Erro ao inicializar banco de dados SQLite: " + err.message);
-		});
 	}
 
 	public async init() {
+		return new Promise<void>((resolve, reject) => {
+			this._database = new sqlite3.Database(this._path, (err) => {
+				if (err) reject("Erro ao inicializar banco de dados SQLite: " + err.message);
+				resolve();
+			});
+		});
+	}
+
+	public async migrate() {
 		const initSql = fs.readFileSync(path.resolve("migrations", "schema_definition.sql"), "utf-8");
-		this._database.exec(initSql, (err) => {
-			if (err) throw new Error("Erro ao inicializar banco de dados SQLite: " + err.message);
+		return new Promise<void>((resolve, reject) => {
+			this.database.exec(initSql, (err) => {
+				if (err) reject(new Error("Erro ao inicializar banco de dados SQLite: " + err.message));
+				resolve();
+			});
 		});
 	}
 
 	public async close() {
 		console.log("Fechando banco de dados...");
-		this._database.close();
+		return new Promise<void>((resolve, reject) => {
+			this.database.close((err) => {
+				if (err) reject(new Error("Erro ao fechar banco de dados SQLite: " + err.message));
+				resolve();
+			});
+		});
 	}
 
 	public async query<T>(sql: string, params?: any[]): Promise<T[]> {
 		return new Promise<T[]>((resolve, reject) => {
-			this._database.all(sql, params, (err, rows) => {
+			this.database.all(sql, params, (err, rows) => {
 				if (err) reject(new Error("Erro ao executar consulta SQL: " + err.message));
 				resolve(rows as T[]);
 			});
@@ -41,11 +55,16 @@ export default class SqliteDatabase implements Database {
 
 	public async exec(sql: string, params?: any[]): Promise<void> {
 		return new Promise<void>((resolve, reject) => {
-			this._database.run(sql, params, (err) => {
+			this.database.run(sql, params, (err) => {
 				if (err) reject(new Error("Erro ao executar comando SQL: " + err.message));
 				resolve();
 			});
 		});
+	}
+
+	private get database(): sqlite3.Database {
+		if (!this._database) throw new Error("Banco de dados SQLite ainda nao foi inicializado.");
+		return this._database;
 	}
 
 }
