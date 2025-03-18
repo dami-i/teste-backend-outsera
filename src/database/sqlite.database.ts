@@ -19,7 +19,7 @@ export default class SqliteDatabase implements Database {
 	}
 
 	public async init() {
-		const initSql = fs.readFileSync(path.resolve("data", "schema_definition.sql"), "utf-8");
+		const initSql = fs.readFileSync(path.resolve("migrations", "schema_definition.sql"), "utf-8");
 		this._database.exec(initSql, (err) => {
 			if (err) throw new Error("Erro ao inicializar banco de dados SQLite: " + err.message);
 		});
