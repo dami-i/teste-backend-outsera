@@ -3,7 +3,8 @@
 	"version": "0.1.0",
 	"author": "Dami Izolan",
 	"scripts": {
-		"test": "npx vitest --config vitest.config.js",
+		"test": "npx vitest run --config vitest.config.js",
+		"test:watch": "npx vitest --config vitest.config.js",
 		"build": "tsc --build --clean && tsc",
 		"build:watch": "tsc --build --clean && tsc --watch",
 		"start": "node build/init.js",
