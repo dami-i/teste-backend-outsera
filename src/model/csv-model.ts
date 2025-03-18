@@ -26,6 +26,7 @@ export namespace CsvModel {
 			studios: row.studios,
 			producers: row.producers,
 			winner: row.winner === "yes",
+			key: Buffer.from(row.title + row.year).toString("hex"),
 		};
 	}
 

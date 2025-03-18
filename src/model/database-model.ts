@@ -7,6 +7,7 @@ export namespace DatabaseModel {
 		studios: string;
 		producers: string;
 		winner: boolean;
+		key: string;
 	};
 
 }

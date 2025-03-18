@@ -8,8 +8,8 @@ export namespace SqliteQueryStrategy {
 		public resetTo(movies: DatabaseModel.Movie[]): QueryStrategy.QueryPlan {
 			const inserts: QueryStrategy.Query[] = movies.map(movie => {
 				return {
-					query: "INSERT INTO movies (title, year, studios, producers, winner) VALUES (?, ?, ?, ?, ?);",
-					params: [movie.title, movie.year, movie.studios, movie.producers, movie.winner],
+					query: "INSERT INTO movies ('title', 'year', 'studios', 'producers', 'winner', 'key') VALUES (?, ?, ?, ?, ?, ?);",
+					params: [movie.title, movie.year, movie.studios, movie.producers, movie.winner, movie.key],
 				};
 			});
 			return [
@@ -24,8 +24,8 @@ export namespace SqliteQueryStrategy {
 		public insertMany(movies: DatabaseModel.Movie[]): QueryStrategy.QueryPlan {
 			const inserts: QueryStrategy.Query[] = movies.map(movie => {
 				return {
-					query: "INSERT INTO movies (title, year, studios, producers, winner) VALUES (?, ?, ?, ?, ?);",
-					params: [movie.title, movie.year, movie.studios, movie.producers, movie.winner],
+					query: "INSERT INTO movies ('title', 'year', 'studios', 'producers', 'winner', 'key') VALUES (?, ?, ?, ?, ?, ?);",
+					params: [movie.title, movie.year, movie.studios, movie.producers, movie.winner, movie.key],
 				};
 			});
 			return [
@@ -36,7 +36,7 @@ export namespace SqliteQueryStrategy {
 		}
 
 		public findWinners(): QueryStrategy.Query {
-			return { query: "SELECT * FROM movies WHERE winner = 1;" };
+			return { query: "SELECT * FROM 'movies' WHERE 'winner' = 1;" };
 		}
 
 	}

@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS "movies" (
 	"studios"		TEXT 		NOT NULL,
 	"producers"		TEXT 		NOT NULL,
 	"winner"		INTEGER 	NOT NULL CHECK(winner in (0, 1)),
+	"key"			TEXT 		NOT NULL UNIQUE,
 	"created_at"	DATETIME 	DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY("id" AUTOINCREMENT) ON CONFLICT ROLLBACK
 );
--- TODO: Criar compound key com title + year codificado em base64.
