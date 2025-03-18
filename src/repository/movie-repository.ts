@@ -28,7 +28,8 @@ export default class MovieRepository {
 
 	public async findAllWithAwards(): Promise<DatabaseModel.Movie[]> {
 		const { query } = this._queries.findWinners();
-		return this._database.query<DatabaseModel.Movie>(query);
+		const movies = await this._database.query<DatabaseModel.Movie>(query);
+		return movies;
 	}
 
 }

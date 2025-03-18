@@ -46,9 +46,9 @@ export default class SqliteDatabase implements Database {
 
 	public async query<T>(sql: string, params?: any[]): Promise<T[]> {
 		return new Promise<T[]>((resolve, reject) => {
-			this.database.all(sql, params, (err, rows) => {
+			this.database.all<T>(sql, params, (err, rows) => {
 				if (err) reject(new Error("Erro ao executar consulta SQL: " + err.message));
-				resolve(rows as T[]);
+				resolve(rows);
 			});
 		});
 	}
