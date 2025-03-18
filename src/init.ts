@@ -5,7 +5,7 @@ import NodeWebServer from "./web/node.web-server";
 import { isMode } from "./services/data-loader";
 
 const initServices: ServiceList = {
-	database: new SqliteDatabase("database/database.sqlite3"),
+	database: new SqliteDatabase("data/database.sqlite3"),
 	dataLoader: new MovieDataLoader("csv/movielist.csv"),
 	webServer: new NodeWebServer(),
 };

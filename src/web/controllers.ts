@@ -4,7 +4,7 @@ import { SqliteQueryStrategy } from "../database/sqlite.query-strategy";
 import MovieRepository from "../repository/movie-repository";
 
 const services = {
-	database: new SqliteDatabase("database/database.sqlite3"),
+	database: new SqliteDatabase("data/database.sqlite3"),
 };
 
 export default {
