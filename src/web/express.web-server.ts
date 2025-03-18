@@ -4,7 +4,7 @@ import { WebServer } from "../interfaces";
 import { setupApp } from "./app";
 import { WebServerControllers } from "../controllers/web-server.controllers";
 
-export default class NodeWebServer implements WebServer {
+export default class ExpressWebServer implements WebServer {
 
 	public async start(controllers: WebServerControllers) {
 		const app = this._createApp(controllers);

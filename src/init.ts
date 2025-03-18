@@ -1,7 +1,7 @@
 import type { Database, CsvDataLoader, WebServer } from "./interfaces";
 import SqliteDatabase from "./database/sqlite.database";
 import MovieDataLoader from "./services/movie.data-loader";
-import NodeWebServer from "./web/node.web-server";
+import ExpressWebServer from "./web/express.web-server";
 import { isMode } from "./services/data-loader";
 import config from "./config";
 import AwardsController from "./controllers/awards-controller";
@@ -14,7 +14,7 @@ async function init() {
 	const services: ServiceList = {
 		database: new SqliteDatabase(config.databasePath),
 		dataLoader: new MovieDataLoader(config.csvPath),
-		webServer: new NodeWebServer(),
+		webServer: new ExpressWebServer(),
 	};
 
 	const mode = process.argv[2] ?? "replace";
