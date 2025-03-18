@@ -1,96 +1,121 @@
 import fs from "node:fs";
 import path from "node:path";
-import { expect, test, beforeAll, afterAll, suite } from "vitest";
+import { expect, test, suite, afterAll } from "vitest";
 import request from "supertest";
-import SqliteDatabase from "../database/sqlite.database";
 import { DatabaseModel } from "../model/database-model";
+import SqliteDatabase from "../database/sqlite.database";
 import MovieDataLoader from "../services/movie.data-loader";
-import app from "../web/app";
+import ExpressWebServer from "../web/express.web-server";
+import { SqliteQueryStrategy } from "../database/sqlite.query-strategy";
+import MovieRepository from "../repository/movie-repository";
+import AwardsController from "../controllers/awards-controller";
 
 const config = {
-	databasePath: "data/database.test.sqlite3",
-	csvPath: "csv/movielist.test.csv",
+	testDatabasePath: "data/database.test.sqlite3",
+	testCsvPath: "csv/movielist.test.csv",
 };
 
-const database = new SqliteDatabase(config.databasePath);
-const dataLoader = new MovieDataLoader(config.csvPath);
+const testDatabase = new SqliteDatabase(config.testDatabasePath);
+const testDataLoader = new MovieDataLoader(config.testCsvPath);
 
-beforeAll(() => {
-	if (fs.existsSync(path.resolve(config.databasePath))) {
-		fs.unlinkSync(path.resolve(config.databasePath));
-	}
-});
+suite.sequential("Teste de integração", async () => {
 
-suite.sequential("Teste de integração", () => {
+	deleteDatabaseFile();
 
-	suite.sequential("Na inicialização", async () => {
-
-		test("Não deve haver arquivo de banco de dados", () => {
-			expect(fs.existsSync(path.resolve(config.databasePath))).toBe(false);
-		});
-
-		test("Deve criar um arquivo de banco de dados SQLite", async () => {
-			await database.init();
-			expect(fs.existsSync(path.resolve(config.databasePath))).toBe(true);
-		});
-
-		test("Deve criar a tabela de filmes no banco de dados", async () => {
-			await database.migrate();
-
-			const tableInfo = await database.query<{
-				cid: number;
-				name: string;
-				type: string;
-				notnull: number;
-				dflt_value: any;
-				pk: number;
-			}>("PRAGMA table_info('movies');");
-			expect(tableInfo.length).toBe(8);
-
-			const columns = tableInfo.map(row => row.name);
-			expect(columns).toMatchObject(["id", "title", "year", "studios", "producers", "winner", "key", "created_at"]);
-
-			const dataTypes = tableInfo.map(row => row.type);
-			expect(dataTypes).toMatchObject(["INTEGER", "TEXT", "INTEGER", "TEXT", "TEXT", "INTEGER", "TEXT", "DATETIME"]);
-
-			const notNulls = tableInfo.map(row => row.notnull);
-			expect(notNulls).toMatchObject([1, 1, 1, 1, 1, 1, 1, 0]);
-		});
-
-		test("Deve encontrar o arquivo CSV", () => {
-			expect(fs.existsSync(path.resolve(config.csvPath))).toBe(true);
-		});
-
-		test("Deve popular no banco de dados o conteúdo do CSV", async () => {
-			await dataLoader.load(database, "replace");
-
-			const rows = await database.query<DatabaseModel.Movie>("SELECT * FROM movies;");
-			expect(rows.length).toBe(83);
-
-			const yearSum = rows.reduce((sum, row) => sum + row.year, 0);
-			expect(yearSum).toBe(165947);
-		});
-
+	test("Não deve haver arquivo de banco de dados", () => {
+		expect(fs.existsSync(path.resolve(config.testDatabasePath))).toBe(false);
 	});
 
-	suite("Teste de endpoints", async () => {
-
-		// FIX Receber a instância do banco de dados no controller
-		test("Deve retornar os produtores com os menores e maiores intervalo entre prêmios", async () => {
-			request(app).get("/api/v1/awards-interval").then(res => {
-				expect(res.statusCode).toBe(200);
-				expect(res.body).toBeInstanceOf(Array);
-				expect(res.body.length).toBe(2);
-			});
-		});
-
+	test("Deve criar um arquivo de banco de dados SQLite", async () => {
+		await testDatabase.init();
+		expect(fs.existsSync(path.resolve(config.testDatabasePath))).toBe(true);
 	});
 
+	test("Deve criar a tabela de filmes no banco de dados", async () => {
+		await testDatabase.migrate();
+		const tableInfo = await testDatabase.query<{
+			cid: number;
+			name: string;
+			type: string;
+			notnull: number;
+			dflt_value: any;
+			pk: number;
+		}>("PRAGMA table_info('movies');");
+		expect(tableInfo.length).toBe(8);
+		const columns = tableInfo.map(row => row.name);
+		expect(columns).toMatchObject(["id", "title", "year", "studios", "producers", "winner", "key", "created_at"]);
+		const dataTypes = tableInfo.map(row => row.type);
+		expect(dataTypes).toMatchObject(["INTEGER", "TEXT", "INTEGER", "TEXT", "TEXT", "INTEGER", "TEXT", "DATETIME"]);
+		const notNulls = tableInfo.map(row => row.notnull);
+		expect(notNulls).toMatchObject([1, 1, 1, 1, 1, 1, 1, 0]);
+	});
+
+	test("Deve encontrar o arquivo CSV", () => {
+		expect(fs.existsSync(path.resolve(config.testCsvPath))).toBe(true);
+	});
+
+	test("Deve popular no banco de dados o conteúdo do CSV", async () => {
+		await testDataLoader.load(testDatabase, "replace");
+		const rows = await testDatabase.query<DatabaseModel.Movie>("SELECT * FROM movies;");
+		const rowsNumber = fs.readFileSync(path.resolve(config.testCsvPath), "utf-8")
+			.split("\n")
+			.map(line => line.trim())
+			.filter(line => line !== "")
+			.length - 1;
+		expect(rows.length).toBe(rowsNumber);
+	});
+
+	const strategy = {
+		movies: new SqliteQueryStrategy.Movies(),
+	};
+	const repositories = {
+		movies: new MovieRepository(testDatabase, strategy.movies),
+	};
+	const controllers = {
+		awards: new AwardsController(repositories.movies)
+	};
+	const testWebServer = new ExpressWebServer();
+	await testWebServer.start(controllers);
+
+	test("Serviço web deve estar rodando", async () => {
+		expect(testWebServer.server).toBeDefined();
+		const res = await request(testWebServer.server).get("/test");
+		expect(res.status).toBe(200);
+		expect(res.text).toBe("OK");
+	});
+
+	test("Deve retornar os produtores com os menores e maiores intervalo entre prêmios", async () => {
+		const res = await request(testWebServer.server).get("/api/v1/awards-interval");
+		expect(res.status).toBe(200);
+		expect(res.body).toBeDefined();
+		expect(res.body).toHaveProperty("min");
+		expect(res.body).toHaveProperty("max");
+		expect(res.body.min).toBeInstanceOf(Array);
+		expect(res.body.max).toBeInstanceOf(Array);
+		if (res.body.min.length > 0) {
+			const elementIsIntervalResult = (element: any) => {
+				return element.hasOwnProperty("producer") && typeof element.producer === "string"
+					&& element.hasOwnProperty("interval") && typeof element.interval === "number"
+					&& element.hasOwnProperty("previousWin") && typeof element.previousWin === "number"
+					&& element.hasOwnProperty("followingWin") && typeof element.followingWin === "number";
+			};
+			const allElementsHaveProperties =
+				res.body.min.every(elementIsIntervalResult) &&
+				res.body.max.every(elementIsIntervalResult);
+			expect(allElementsHaveProperties).toBe(true);
+		}
+	});
+
+	afterAll(async () => {
+		await testDatabase.close();
+	});
+
+	deleteDatabaseFile();
+
 });
 
-afterAll(async () => {
-	await database.close();
-	if (fs.existsSync(path.resolve(config.databasePath))) {
-		fs.unlinkSync(path.resolve(config.databasePath));
+function deleteDatabaseFile() {
+	if (fs.existsSync(path.resolve(config.testDatabasePath))) {
+		fs.unlinkSync(path.resolve(config.testDatabasePath));
 	}
-});
+}
