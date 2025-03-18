@@ -1,5 +1,6 @@
 .notes/
 node_modules/
 build/
+csv/*.xlsx
 
 database/database.sqlite3
