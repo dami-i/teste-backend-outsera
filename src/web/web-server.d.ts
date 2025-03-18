@@ -1,3 +1,5 @@
+import { WebServerControllers } from "../controllers/web-server.controllers";
+
 export interface WebServer {
-	start(): Promise<void>;
+	start(controllers: WebServerControllers): Promise<void>;
 }

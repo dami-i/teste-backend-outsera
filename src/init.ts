@@ -4,6 +4,9 @@ import MovieDataLoader from "./services/movie.data-loader";
 import NodeWebServer from "./web/node.web-server";
 import { isMode } from "./services/data-loader";
 import config from "./config";
+import AwardsController from "./controllers/awards-controller";
+import MovieRepository from "./repository/movie-repository";
+import { SqliteQueryStrategy } from "./database/sqlite.query-strategy";
 
 init();
 
@@ -44,7 +47,18 @@ async function init() {
 	await services.dataLoader.load(services.database, mode);
 
 	console.log("Inicializando o servidor web...");
-	await services.webServer.start();
+
+	const strategy = {
+		movies: new SqliteQueryStrategy.Movies(),
+	};
+	const repositories = {
+		movies: new MovieRepository(services.database, strategy.movies),
+	};
+	const controllers = {
+		awards: new AwardsController(repositories.movies)
+	};
+	
+	await services.webServer.start(controllers);
 };
 
 type ServiceList = {
