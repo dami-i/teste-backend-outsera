@@ -3,11 +3,11 @@ import { WebServerControllers } from "../controllers/web-server.controllers";
 
 export function createV1Router(controllers: WebServerControllers) {
 	const v1 = Router();
-	
+
 	v1.get("/", (_, res) => {
-		return res.send("Doc"); // TODO: Retornar documentação da API
+		return res.send("Tente <a href=\"/api/v1/awards-interval\">/api/v1/awards-interval</a>");
 	});
-	
+
 	v1.get("/awards-interval", async (_, res, next) => {
 		try {
 			const result = await controllers.awards.getMinMaxIntervals();
@@ -16,6 +16,6 @@ export function createV1Router(controllers: WebServerControllers) {
 			return next(err);
 		}
 	});
-	
+
 	return v1;
 }
