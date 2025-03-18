@@ -1,0 +1,95 @@
+openapi: 3.0.0
+info:
+  title: Golden Raspberry Awards
+  description: |-
+    WebService REST para entrega do teste de back end da empresa Outsera.
+
+    Autor: Dami Izolan
+  version: '1.0'
+tags:
+  - name: Intervalos
+paths:
+  /api/v1/awards-interval:
+    get:
+      operationId: Awards_maxMin
+      summary: Maiores e menores intervalos entre dois prêmios
+      description: Retorna os produtores com o maior intervalo entre dois prêmios consecutivos e com o menor intervalo.
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AwardsInterval'
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+        - Intervalos
+components:
+  schemas:
+    AwardsInterval:
+      type: object
+      required:
+        - min
+        - max
+      properties:
+        min:
+          type: array
+          items:
+            $ref: '#/components/schemas/Result'
+        max:
+          type: array
+          items:
+            $ref: '#/components/schemas/Result'
+      example:
+        min:
+          - producer: John Doe
+            interval: 1
+            previousWin: 1999
+            followingWin: 2000
+        max:
+          - producer: Jane Doe
+            interval: 15
+            previousWin: 2001
+            followingWin: 2016
+    Error:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+      example:
+        error: Internal server error
+    Result:
+      type: object
+      required:
+        - producer
+        - interval
+        - previousWin
+        - followingWin
+      properties:
+        producer:
+          type: string
+        interval:
+          type: integer
+          format: int32
+        previousWin:
+          type: integer
+          format: int32
+        followingWin:
+          type: integer
+          format: int32
+    Versions:
+      type: string
+      enum:
+        - '1.0'
+servers:
+  - url: http://localhost:3000
+    description: Local server
+    variables: {}

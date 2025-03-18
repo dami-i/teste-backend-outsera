@@ -5,7 +5,7 @@ export function createV1Router(controllers: WebServerControllers) {
 	const v1 = Router();
 
 	v1.get("/", (_, res) => {
-		return res.send("Tente <a href=\"/api/v1/awards-interval\">/api/v1/awards-interval</a>");
+		return res.redirect("/api/docs");
 	});
 
 	v1.get("/awards-interval", async (_, res, next) => {
