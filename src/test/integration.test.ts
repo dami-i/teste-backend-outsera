@@ -11,7 +11,7 @@ import MovieRepository from "../repository/movie-repository";
 import AwardsController from "../controllers/awards-controller";
 
 const config = {
-	csvPath: "csv/movielist.csv",
+	csvPath: "data/movielist.csv",
 };
 
 const testDatabase = new InMemorySqliteDatabase();

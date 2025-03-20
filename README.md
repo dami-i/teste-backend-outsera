@@ -58,5 +58,5 @@ O repositório contém o CSV fornecido para o desenvolvimento da aplicação.
 
 Caso desejar, é possível substituir os arquivos:
 
-- `csv/movielist.csv` – para uso em produção
-- `csv/movielist.test.csv` – para execução dos testes de integração
+- `data/movielist.csv` – para uso em produção
+- `data/movielist.test.csv` – para execução dos testes de integração
