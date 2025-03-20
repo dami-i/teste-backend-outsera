@@ -1,7 +1,3 @@
 .notes/
 node_modules/
 build/
-csv/*.xlsx
-
-data/database.sqlite3
-data/database.test.sqlite3
