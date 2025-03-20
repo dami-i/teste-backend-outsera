@@ -3,7 +3,7 @@ import path from "node:path";
 import sqlite3 from "sqlite3";
 import { Database } from "./database";
 
-export default class SqliteDatabase implements Database {
+export default class InMemorySqliteDatabase implements Database {
 
 	private _path: string;
 	private _database: sqlite3.Database | undefined;
@@ -11,8 +11,8 @@ export default class SqliteDatabase implements Database {
 	/**
 	 * @param databasePath Path to where the database file is stored. Relative to the project's root.
 	 */
-	public constructor (databasePath: string) {
-		this._path = path.resolve(databasePath);
+	public constructor () {
+		this._path = ":memory:";
 	}
 
 	public async init() {
@@ -62,7 +62,7 @@ export default class SqliteDatabase implements Database {
 		});
 	}
 
-	private get database(): sqlite3.Database {
+	public get database(): sqlite3.Database {
 		if (!this._database) throw new Error("Banco de dados SQLite ainda nao foi inicializado.");
 		return this._database;
 	}

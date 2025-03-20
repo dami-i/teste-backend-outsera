@@ -3,7 +3,7 @@ import path from "node:path";
 import { expect, test, suite, afterAll } from "vitest";
 import request from "supertest";
 import { DatabaseModel } from "../model/database-model";
-import SqliteDatabase from "../database/sqlite.database";
+import InMemorySqliteDatabase from "../database/in-memory-sqlite.database";
 import MovieDataLoader from "../services/movie.data-loader";
 import ExpressWebServer from "../web/express.web-server";
 import { SqliteQueryStrategy } from "../database/sqlite.query-strategy";
@@ -11,24 +11,17 @@ import MovieRepository from "../repository/movie-repository";
 import AwardsController from "../controllers/awards-controller";
 
 const config = {
-	testDatabasePath: "data/database.test.sqlite3",
 	testCsvPath: "csv/movielist.test.csv",
 };
 
-const testDatabase = new SqliteDatabase(config.testDatabasePath);
+const testDatabase = new InMemorySqliteDatabase();
 const testDataLoader = new MovieDataLoader(config.testCsvPath);
 
 suite.sequential("Teste de integração", async () => {
 
-	deleteDatabaseFile();
-
-	test("Não deve haver arquivo de banco de dados", () => {
-		expect(fs.existsSync(path.resolve(config.testDatabasePath))).toBe(false);
-	});
-
-	test("Deve criar um arquivo de banco de dados SQLite", async () => {
+	test("Deve inicializar um banco de dados SQLite em memória", async () => {
 		await testDatabase.init();
-		expect(fs.existsSync(path.resolve(config.testDatabasePath))).toBe(true);
+		expect(testDatabase.database).toBeDefined();
 	});
 
 	test("Deve criar a tabela de filmes no banco de dados", async () => {
@@ -110,12 +103,4 @@ suite.sequential("Teste de integração", async () => {
 		await testDatabase.close();
 	});
 
-	deleteDatabaseFile();
-
 });
-
-function deleteDatabaseFile() {
-	if (fs.existsSync(path.resolve(config.testDatabasePath))) {
-		fs.unlinkSync(path.resolve(config.testDatabasePath));
-	}
-}

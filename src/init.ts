@@ -1,5 +1,5 @@
 import type { Database, CsvDataLoader, WebServer } from "./interfaces";
-import SqliteDatabase from "./database/sqlite.database";
+import InMemorySqliteDatabase from "./database/in-memory-sqlite.database";
 import MovieDataLoader from "./services/movie.data-loader";
 import ExpressWebServer from "./web/express.web-server";
 import { isMode } from "./services/data-loader";
@@ -12,7 +12,7 @@ init();
 
 async function init() {
 	const services: ServiceList = {
-		database: new SqliteDatabase(config.databasePath),
+		database: new InMemorySqliteDatabase(),
 		dataLoader: new MovieDataLoader(config.csvPath),
 		webServer: new ExpressWebServer(),
 	};
