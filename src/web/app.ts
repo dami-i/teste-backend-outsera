@@ -8,6 +8,8 @@ import { WebServerControllers } from "../controllers/web-server.controllers";
 export function setupApp(controllers: WebServerControllers) {
 	const app = express();
 	const v1Router = createV1Router(controllers);
+
+	app.disable("x-powered-by");
 	
 	app.use("/test", (_, res) => { return res.status(200).send("OK"); });
 
