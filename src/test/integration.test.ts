@@ -96,6 +96,10 @@ suite.sequential("Teste de integração", async () => {
 				res.body.min.every(elementIsIntervalResult) &&
 				res.body.max.every(elementIsIntervalResult);
 			expect(allElementsHaveProperties).toBe(true);
+			expect(res.body).toEqual({
+				min: [{ producer: "Joel Silver", interval: 1, previousWin: 1990, followingWin: 1991 }],
+				max: [{ producer: "Matthew Vaughn", interval: 13, previousWin: 2002, followingWin: 2015 }]
+			});
 		}
 	});
 
