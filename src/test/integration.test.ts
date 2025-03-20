@@ -11,11 +11,11 @@ import MovieRepository from "../repository/movie-repository";
 import AwardsController from "../controllers/awards-controller";
 
 const config = {
-	testCsvPath: "csv/movielist.test.csv",
+	csvPath: "csv/movielist.csv",
 };
 
 const testDatabase = new InMemorySqliteDatabase();
-const testDataLoader = new MovieDataLoader(config.testCsvPath);
+const testDataLoader = new MovieDataLoader(config.csvPath);
 
 suite.sequential("Teste de integração", async () => {
 
@@ -43,14 +43,14 @@ suite.sequential("Teste de integração", async () => {
 		expect(notNulls).toMatchObject([1, 1, 1, 1, 1, 1, 1, 0]);
 	});
 
-	test("Deve encontrar o arquivo CSV", () => {
-		expect(fs.existsSync(path.resolve(config.testCsvPath))).toBe(true);
+	test("Deve encontrar o arquivo CSV no diretório", () => {
+		expect(fs.existsSync(path.resolve(config.csvPath))).toBe(true);
 	});
 
 	test("Deve popular no banco de dados o conteúdo do CSV", async () => {
 		await testDataLoader.load(testDatabase, "replace");
 		const rows = await testDatabase.query<DatabaseModel.Movie>("SELECT * FROM movies;");
-		const rowsNumber = fs.readFileSync(path.resolve(config.testCsvPath), "utf-8")
+		const rowsNumber = fs.readFileSync(path.resolve(config.csvPath), "utf-8")
 			.split("\n")
 			.map(line => line.trim())
 			.filter(line => line !== "")
